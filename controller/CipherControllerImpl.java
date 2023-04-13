@@ -91,7 +91,7 @@ public class CipherControllerImpl implements CipherController {
 
     @Override
     public String findKeyBySize(String cipherText, int keyLimit) {
-        ArrayList<String> sequences = new ArrayList<String>();
+        ArrayList<String> sequences = new ArrayList<>();
         String newSequence = "";
         int startAt = 0;
         String key = "";
@@ -115,8 +115,7 @@ public class CipherControllerImpl implements CipherController {
     @Override
     public char calcProbLetterByIndex(int keyLength, int keyCipher, String substring) {
 
-        // Frequências do alfabeto na língua inglesa de A a Z
-        double[] freqEnglish = { 0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015, 0.06094, 0.06966,
+        double[] freq = { 0.08167, 0.01492, 0.02782, 0.04253, 0.12702, 0.02228, 0.02015, 0.06094, 0.06966,
                 0.00153, 0.00772, 0.04025, 0.02406, 0.06749, 0.07507, 0.01929, 0.00095, 0.05987, 0.06327, 0.09056,
                 0.02758, 0.00978, 0.02360, 0.00150, 0.01974, 0.00074 };
         ArrayList<Double> chiSums = new ArrayList<Double>();
@@ -140,9 +139,9 @@ public class CipherControllerImpl implements CipherController {
 
                 // Verificação do número de ocorrências da letra na String
                 countLetterOcc = message.length() - message.replace(String.valueOf(Character.toChars(ASCIILetterA + i)), "").length();
-                double x = countLetterOcc - ((keyCipher) * freqEnglish[i]);
+                double x = countLetterOcc - ((keyCipher) * freq[i]);
                 double numerator = Math.pow(x, 2);
-                chiSum += numerator / (keyCipher * freqEnglish[i]);
+                chiSum += numerator / (keyCipher * freq[i]);
             }
             chiSums.add(chiSum);
         }
