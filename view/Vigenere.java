@@ -14,7 +14,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class Vigenere extends javax.swing.JFrame {
 
     CipherControllerImpl impl = new CipherControllerImpl();
-
+    private String originalCipherText = "";
+    
     public Vigenere() {
         initComponents();
         newProcess();
@@ -35,10 +36,23 @@ public class Vigenere extends javax.swing.JFrame {
         }
     }
 
+    public String formatOutput(String input, int lineBreak){
+        String output = "";
+        for(int i = 0; i < input.length(); i++){
+            if(i % lineBreak != 0){
+                output += input.charAt(i);
+            }else{
+                output += "\n";
+            }
+        }
+        return output;
+    }
+
     public void importCipherFile() throws IOException {
         try {
             String cipherText = impl.readCipherText(txtPath.getText());
-            txtCipher.setText(cipherText);
+            originalCipherText = cipherText;
+            txtCipher.setText(formatOutput(cipherText, 63));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Select a valid file path", "Invalid file path",
                     JOptionPane.ERROR_MESSAGE);
@@ -46,13 +60,14 @@ public class Vigenere extends javax.swing.JFrame {
     }
 
     public void decipher() {
-        String editCipherText = txtCipher.getText().replaceAll("\\s", "").toUpperCase();
+        String editCipherText = originalCipherText.replaceAll("\\s", "").toUpperCase();
         if (!editCipherText.isEmpty()) {
             impl.createSequences(editCipherText);
             int keySize = Integer.parseInt(cb_keySize.getSelectedItem().toString());
             String key = impl.findKeyBySize(editCipherText, keySize);
             txtKeyGuessed.setText(key);
-            txtDecipher.setText(impl.decipherByKey(editCipherText, key));
+            String decipherText = impl.decipherByKey(editCipherText, key);
+            txtDecipher.setText(formatOutput(decipherText, 50));
         } else {
             JOptionPane.showMessageDialog(null, "Import the ciphertext file", "Ciphertext not imported", JOptionPane.ERROR_MESSAGE);
         }
